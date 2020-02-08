@@ -1,63 +1,114 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.io.IOException;
-import java.lang.Math;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Random;
 
 
 
 public class BlackJack{
 
-	public static class Card{
-		int value;
-		BufferedImage cardimage;
-
-		public Card(String filename, int value) throws IOException{
-			this.value = value;
-			BufferedImage image = ImageIO.read(new File("PNG-cards-1.3/" + filename));
-			final double w = image.getWidth();
-			final double h = image.getHeight();
-			BufferedImage scaledImage = new BufferedImage((int)Math.round(w * .2),(int)Math.round(h * .2), BufferedImage.TYPE_INT_ARGB);
-			final AffineTransform at = AffineTransform.getScaleInstance(.2, .2);
-			final AffineTransformOp ato = new AffineTransformOp(at, AffineTransformOp.TYPE_BICUBIC);
-			scaledImage = ato.filter(image, scaledImage);
-			//final Scale scaler = new Scale(2);
-			//scaledImage= scaler.apply(image);
-			this.cardimage = scaledImage;
-		}
+	private static void createWindow(){
+		BFrame window = new BFrame();
 	}
 
-	private static void createWindow(){
-		JFrame frame = new JFrame("BlackJack");
-		frame.setPreferredSize(new Dimension(1100, 600));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		ImageIcon card = new ImageIcon("PNG-cards-1.3/10_of_clubs.png");
-		try{
-			BlackJack.Card testcard = new BlackJack.Card("10_of_clubs.png", 10);
-			card = new ImageIcon(testcard.cardimage);
+	private static Card[] ImportDeck(){
+		File directory = new File("PNG-cards-1.3");
+		String[] cardnames = directory.list();
+		Card[] deck = new Card[cardnames.length];
+		int iterator = 0;
+		for (String cardname : cardnames){
+			Character testing = cardname.charAt(0);
+			try{
+				if (Character.isDigit(testing)){
+					if (testing == '1'){
+						deck[iterator] = new Card(cardname, 10);
+					} else {
+						deck[iterator] = new Card(cardname, Character.getNumericValue(testing));
+					}
+				} else {
+					if (testing == 'a'){
+						deck[iterator] = new Card(cardname, 111);
+					} else {
+						deck[iterator] = new Card(cardname, 10);
+					}
+				}
+			}
+			catch (IOException e){
+				System.out.println("The file in question was not found, verify integrity of system files");
+			}
+			iterator += 1;
 		}
-		catch (IOException e){
-    		System.out.println("Bad things have happened. The apocolypse is coming");
-    	}		
-		//ImageIcon card = new ImageIcon("PNG-cards-1.3/10_of_clubs.png");
+		return deck;
+	}
+
+	private static Card[] ShuffleDeck(Card[] deck){
+		Random rand = new Random();
+		Card storage = null;
+		int location = 0;
+
+		for (int i = 0; i < deck.length; i++){
+			location = rand.nextInt(deck.length);
+			storage = deck[i];
+			deck[i] = deck[location];
+			deck[location] = storage;
+		}
+		return deck;
+	}
+
+	private static void StartGame(Card[] deck){
+		Card[] gamedeck = ShuffleDeck(deck);
+	}
+
+	private static void InitializeWindow(){
+		BFrame window = new BFrame();
+		window.getFrame().getContentPane().setLayout(new GridBagLayout());
+
+		GridBagConstraints a = new GridBagConstraints();
+		JButton stand = new JButton("Stand");
+		a.fill = GridBagConstraints.HORIZONTAL;
+		a.gridx = 11;
+		a.gridy = 0;
+		window.getFrame().getContentPane().add(stand, a);
 		
-		JLabel textLabel = new JLabel("I'm a label in the window",SwingConstants.CENTER); textLabel.setPreferredSize(new Dimension(300, 100));
-		JLabel imagetest = new JLabel(card);
-		frame.getContentPane().add(imagetest, BorderLayout.CENTER);
-		frame.setLocationRelativeTo(null);
-		frame.pack();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
-		Point newLocation = new Point(middle.x - (frame.getWidth() / 2), middle.y - (frame.getHeight() / 2));
-		frame.setLocation(newLocation);
-		frame.setVisible(true); 
+
+		GridBagConstraints b = new GridBagConstraints();
+		JButton hit = new JButton("Hit");
+		b.fill = GridBagConstraints.HORIZONTAL;
+		b.gridx = 11;
+		b.gridy = 1;
+		window.getFrame().getContentPane().add(hit, b);
+		
+
+		GridBagConstraints c = new GridBagConstraints();
+		JButton surrender = new JButton("Surrender");
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 11;
+		c.gridy = 2;
+		window.getFrame().getContentPane().add(surrender, c);
+		
+
+		GridBagConstraints d = new GridBagConstraints();
+		JButton split = new JButton("Split");
+		d.fill = GridBagConstraints.HORIZONTAL;
+		d.gridx = 11;
+		d.gridy = 3;
+		window.getFrame().getContentPane().add(split, d);
+		
+
+		GridBagConstraints e = new GridBagConstraints();
+		JButton doubled = new JButton("Double");
+		e.fill = GridBagConstraints.HORIZONTAL;
+		e.gridx = 11;
+		e.gridy = 4;
+		window.getFrame().getContentPane().add(doubled, e);
+		window.getFrame().pack();
+
 	}
 
 	public static void main(String[] args){
-		createWindow();
+		Card[] deck = ImportDeck();
+		InitializeWindow();
 	}
 }
