@@ -15,12 +15,18 @@
  Rules Source: https://www.888casino.com/blog/blackjack-strategy-guide/how-to-play-blackjack
 
  Compiled with: javac BlackJack.java
+ 
  Run with: java BlackJack
 
+
  .jar compiled with: jar -cfe BlackJack.jar BlackJack *.class PNG-cards-1.3 greencard.png
+ 
  .jar run with: java -jar BlackJack.jar
 
  Output of the command java -version:
+ 
  java version "13" 2019-09-17
+ 
  Java(TM) SE Runtime Environment (build 13+33)
+ 
  Java HotSpot(TM) 64-Bit Server VM (build 13+33, mixed mode, sharing)
