@@ -1,5 +1,7 @@
 # BlackJack
  Blackjack program for Praeses
+ Name: Clay Fonseca
+
  This Project was done using Java
  Since I haven't worked with graphical applications in Java before, I decided to explore it for this project
  Project implements all rules found at the website linked below, player actions are performed by clicking the appropriate button on the right side of the primary game window
